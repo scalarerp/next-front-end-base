@@ -1,12 +1,16 @@
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ModalProvider } from "@/components/providers/modal-provider";
 
 import "./globals.css";
+import "./fonts.css";
+import { cn } from "@/lib/utils";
+import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
+import { SiteHeader } from "@/components/site-header";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Next frontEnd",
@@ -27,14 +31,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased"
+          // fontSans.variable
+        )}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -43,9 +48,14 @@ export default function RootLayout({
           storageKey="next-frontend-theme-2"
         >
           <ModalProvider />
-          {children}
+          <div className="relative flex min-h-screen flex-col">
+            <SiteHeader />
+            <div className="flex-1">{children}</div>
+          </div>
+          <TailwindIndicator />
         </ThemeProvider>
       </body>
     </html>
   );
-}
+};
+export default RootLayout;
