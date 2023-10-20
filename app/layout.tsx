@@ -1,14 +1,14 @@
 // import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { ModalProvider } from "@/components/providers/modal-provider";
+// import { ThemeProvider } from "@/components/providers/theme-provider";
+// import { ModalProvider } from "@/components/providers/modal-provider";
 
 import "./globals.css";
 import "./fonts.css";
 import { cn } from "@/lib/utils";
-import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
-import { SiteHeader } from "@/components/site-header";
+// import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
+// import { SiteHeader } from "@/components/site-header";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -40,7 +40,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           // fontSans.variable
         )}
       >
-        <ThemeProvider
+        {/* <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
@@ -53,7 +53,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             <div className="flex-1">{children}</div>
           </div>
           <TailwindIndicator />
-        </ThemeProvider>
+        </ThemeProvider> */}
+
+        <div className="flex-1">{children}</div>
       </body>
     </html>
   );
