@@ -2,13 +2,17 @@ import { SelectedStatus, TreeEntry } from "./types";
 
 export const treeHelper = (data: TreeEntry, selectedIds: number[]) => {
   const isSelected = selectedIds.includes(data.key);
-  const currentKeyAndChildIds = [data.key, ...getAllChildIds(data)];
-  const someChildrenSelected = currentKeyAndChildIds.some((x) =>
+
+  const currentKeyAndChildKeys = [data.key, ...getAllChildKeys(data)];
+
+  const someChildrenSelected = currentKeyAndChildKeys.some((x) =>
     selectedIds.includes(x)
   );
-  const everyChildrenSelected = currentKeyAndChildIds.every((x) =>
+
+  const everyChildrenSelected = currentKeyAndChildKeys.every((x) =>
     selectedIds.includes(x)
   );
+
   const hasChildren = data.children && data.children.length > 0;
 
   let selectedStatus: SelectedStatus =
@@ -53,7 +57,7 @@ export const treeHelper = (data: TreeEntry, selectedIds: number[]) => {
 
   return {
     isSelected: _isSelected,
-    currentKeyAndChildIds,
+    currentKeyAndChildIds: currentKeyAndChildKeys,
     someChildrenSelected,
     everyChildrenSelected,
     selectedStatus,
@@ -94,12 +98,12 @@ export const getChildrenSelectedStatus = (
   return "selected"; // O nó folha é considerado selecionado
 };
 
-const getAllChildIds = (data: TreeEntry): number[] => {
+const getAllChildKeys = (data: TreeEntry): number[] => {
   let childIds: number[] = [];
   if (data.children) {
     for (const child of data.children) {
       childIds.push(child.key);
-      childIds = childIds.concat(getAllChildIds(child));
+      childIds = childIds.concat(getAllChildKeys(child));
     }
   }
   return childIds;

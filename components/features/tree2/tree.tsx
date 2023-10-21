@@ -40,6 +40,7 @@ const Tree2 = ({
 
     result = [...new Set(result)];
 
+    //todo passar este for par useCallback ou useMemo
     for (const parent of parents) {
       const parentStatus = getChildrenSelectedStatus(parent, result);
       if (parentStatus === "selected" && !result.includes(parent.key)) {

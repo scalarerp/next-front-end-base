@@ -13,23 +13,33 @@ const Tree1Example = () => {
     console.log(newValues);
   }, []);
 
-  const filterNodes = (filtered: TreeEntry[], node: TreeEntry) => {
-    const children = (node.children || []).reduce(filterNodes, []);
+  //nao é useCallback por que é um reduce
+  const recursiveFilterNodes = (
+    filteredData: TreeEntry[],
+    currentEntry: TreeEntry
+  ) => {
+    const children = (currentEntry.children || []).reduce(
+      recursiveFilterNodes,
+      []
+    );
 
     if (
       // Node's label matches the search string
-      node.name.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) >
-        -1 ||
+      currentEntry.name
+        .toLocaleLowerCase()
+        .indexOf(searchTerm.toLocaleLowerCase()) > -1 ||
       // Or a children has a matching node
       children.length
     ) {
-      filtered.push({ ...node, children });
+      filteredData.push({ ...currentEntry, children });
     }
 
-    return filtered;
+    return filteredData;
   };
 
-  const data = searchTerm === "" ? mockData : mockData.reduce(filterNodes, []);
+  const data =
+    searchTerm === "" ? mockData : mockData.reduce(recursiveFilterNodes, []);
+
   return (
     <>
       <label htmlFor="searchTerm">
