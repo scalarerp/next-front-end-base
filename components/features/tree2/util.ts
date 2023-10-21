@@ -1,17 +1,6 @@
 import { SelectedStatus, TreeEntry } from "./types";
 
-export const getAllChildIds = (data: TreeEntry): number[] => {
-  let childIds: number[] = [];
-  if (data.children) {
-    for (const child of data.children) {
-      childIds.push(child.key);
-      childIds = childIds.concat(getAllChildIds(child));
-    }
-  }
-  return childIds;
-};
-
-export const getSelectedStatus = (data: TreeEntry, selectedIds: number[]) => {
+export const treeHelper = (data: TreeEntry, selectedIds: number[]) => {
   const isSelected = selectedIds.includes(data.key);
   const currentKeyAndChildIds = [data.key, ...getAllChildIds(data)];
   const someChildrenSelected = currentKeyAndChildIds.some((x) =>
@@ -20,47 +9,17 @@ export const getSelectedStatus = (data: TreeEntry, selectedIds: number[]) => {
   const everyChildrenSelected = currentKeyAndChildIds.every((x) =>
     selectedIds.includes(x)
   );
-  const status =
-    !data.children || data.children.length === 0
-      ? isSelected
-      : areAllChildrenSelected(data, selectedIds);
+  const hasChildren = data.children && data.children.length > 0;
 
-  let selectedStatus: SelectedStatus = "selected";
-  if (status === true) {
-    // console.log("Todos os filhos estão selecionados.");
-    selectedStatus = "selected";
-  } else if (status === false) {
-    // console.log("Nenhum filho está selecionado.");
-    selectedStatus = "notSelected";
-  } else {
-    // console.log("Nem todos os filhos estão selecionados (indeterminado).");
+  let selectedStatus: SelectedStatus =
+    !hasChildren && isSelected
+      ? "selected"
+      : !hasChildren && !isSelected
+      ? "notSelected"
+      : getChildrenSelectedStatus(data, selectedIds);
+
+  if (someChildrenSelected && selectedStatus === "notSelected")
     selectedStatus = "indeterminate";
-  }
-
-  if (someChildrenSelected && !status) selectedStatus = "indeterminate";
-
-  if (data.key === 5) {
-    console.log(
-      "key",
-      data.key,
-      isSelected,
-      status,
-      selectedStatus,
-      everyChildrenSelected,
-      someChildrenSelected
-    );
-  }
-  if (data.key === 55) {
-    console.log(
-      "key",
-      data.key,
-      isSelected,
-      status,
-      selectedStatus,
-      everyChildrenSelected,
-      someChildrenSelected
-    );
-  }
 
   const _isSelected = selectedStatus === "selected" ? true : false;
 
@@ -68,6 +27,29 @@ export const getSelectedStatus = (data: TreeEntry, selectedIds: number[]) => {
     _isSelected && !selectedIds.includes(data.key)
       ? [...selectedIds, data.key]
       : selectedIds;
+
+  // if (data.key === 5) {
+  //   console.log(
+  //     "key",
+  //     data.key,
+  //     isSelected,
+  //     selectedStatus,
+  //     everyChildrenSelected,
+  //     someChildrenSelected,
+  //     newSelectedIds
+  //   );
+  // }
+  // if (data.key === 55) {
+  //   console.log(
+  //     "key",
+  //     data.key,
+  //     isSelected,
+  //     selectedStatus,
+  //     everyChildrenSelected,
+  //     someChildrenSelected,
+  //     newSelectedIds
+  //   );
+  // }
 
   return {
     isSelected: _isSelected,
@@ -79,10 +61,10 @@ export const getSelectedStatus = (data: TreeEntry, selectedIds: number[]) => {
   };
 };
 
-const areAllChildrenSelected = (
+export const getChildrenSelectedStatus = (
   data: TreeEntry,
   selectedIds: number[]
-): boolean | null => {
+): SelectedStatus => {
   if (data.children) {
     let allSelected = true;
     let noneSelected = true;
@@ -94,7 +76,7 @@ const areAllChildrenSelected = (
         noneSelected = false; // Pelo menos um filho está selecionado
       }
 
-      const childStatus = areAllChildrenSelected(child, selectedIds);
+      const childStatus = getChildrenSelectedStatus(child, selectedIds);
       if (childStatus === null) {
         allSelected = false;
         noneSelected = false;
@@ -102,12 +84,23 @@ const areAllChildrenSelected = (
     }
 
     if (allSelected) {
-      return true; // Todos os filhos estão selecionados
+      return "selected"; // Todos os filhos estão selecionados
     } else if (noneSelected) {
-      return false; // Nenhum filho está selecionado
+      return "notSelected"; // Nenhum filho está selecionado
     } else {
-      return null; // Nem todos os filhos estão selecionados
+      return "indeterminate"; // Nem todos os filhos estão selecionados
     }
   }
-  return true; // O nó folha é considerado selecionado
+  return "selected"; // O nó folha é considerado selecionado
+};
+
+const getAllChildIds = (data: TreeEntry): number[] => {
+  let childIds: number[] = [];
+  if (data.children) {
+    for (const child of data.children) {
+      childIds.push(child.key);
+      childIds = childIds.concat(getAllChildIds(child));
+    }
+  }
+  return childIds;
 };

@@ -1,38 +1,55 @@
 "use client";
 
 import { TreeEntry } from "./types";
-import { getSelectedStatus, getAllChildIds } from "./util";
+import { getChildrenSelectedStatus, treeHelper } from "./util";
 
 interface Props {
   data: TreeEntry;
   depth: number;
   selectedIds: number[];
   onSelectionChange: (selectedIds: number[]) => void;
+  parents: TreeEntry[];
 }
 
-const Tree2 = ({ data, depth, selectedIds, onSelectionChange }: Props) => {
+const Tree2 = ({
+  data,
+  depth,
+  selectedIds,
+  onSelectionChange,
+  parents = [],
+}: Props) => {
   const {
     isSelected,
-    currentKeyAndChildIds,
-    // someChildrenSelected,
-    everyChildrenSelected,
     selectedStatus,
+    currentKeyAndChildIds,
+    everyChildrenSelected,
     newSelectedIds,
-  } = getSelectedStatus(data, selectedIds);
+  } = treeHelper(data, selectedIds);
 
   const toggleSelect = () => {
+    let result: number[] = [];
+
     if (!everyChildrenSelected) {
       //add
-      onSelectionChange([...newSelectedIds, ...currentKeyAndChildIds]);
-      return;
+      result = [...newSelectedIds, ...currentKeyAndChildIds];
     }
     if (everyChildrenSelected) {
       //remove
-      onSelectionChange(
-        newSelectedIds.filter((x) => !currentKeyAndChildIds.includes(x))
-      );
-      return;
+      result = newSelectedIds.filter((x) => !currentKeyAndChildIds.includes(x));
     }
+
+    result = [...new Set(result)];
+
+    for (const parent of parents) {
+      const parentStatus = getChildrenSelectedStatus(parent, result);
+      if (parentStatus === "selected" && !result.includes(parent.key)) {
+        result = [parent.key, ...result];
+      } else {
+        result = result.filter((x) => x !== parent.key);
+      }
+    }
+
+    onSelectionChange(result);
   };
 
   return (
@@ -69,6 +86,7 @@ const Tree2 = ({ data, depth, selectedIds, onSelectionChange }: Props) => {
               depth={depth + 1}
               selectedIds={selectedIds}
               onSelectionChange={onSelectionChange}
+              parents={[data, ...parents]}
             />
           );
         })}

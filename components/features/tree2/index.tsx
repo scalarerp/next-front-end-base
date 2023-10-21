@@ -20,6 +20,7 @@ const Tree1Example = () => {
             depth={0}
             selectedIds={selectedIds}
             onSelectionChange={onSelectionChange}
+            parents={[]}
           />
         </li>
       ))}
