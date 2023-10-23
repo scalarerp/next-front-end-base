@@ -8,6 +8,30 @@ export const mockData: TreeEntry[] = [
       {
         key: 2,
         name: "Child 2",
+        children: [
+          {
+            key: 22,
+            name: "Child 22",
+          },
+          {
+            key: 25,
+            name: "Child 25",
+          },
+        ],
+      },
+      {
+        key: 3,
+        name: "Child 3",
+        children: [
+          {
+            key: 33,
+            name: "Child 33",
+          },
+          {
+            key: 37,
+            name: "Child 37",
+          },
+        ],
       },
       {
         key: 5,

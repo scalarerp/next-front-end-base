@@ -2,7 +2,8 @@ export interface TreeEntry {
   key: number;
   name: string;
   children?: TreeEntry[];
-  // selected: boolean;
+  className?: string;
+  component?: React.ReactNode;
 }
 
 export type SelectedStatus = "selected" | "notSelected" | "indeterminate";

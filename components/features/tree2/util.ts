@@ -3,7 +3,7 @@ import { SelectedStatus, TreeEntry } from "./types";
 export const treeHelper = (data: TreeEntry, selectedIds: number[]) => {
   const isSelected = selectedIds.includes(data.key);
 
-  const currentKeyAndChildKeys = [data.key, ...getAllChildKeys(data)];
+  const currentKeyAndChildKeys = [data.key, ...getChildrenKeys(data)];
 
   const someChildrenSelected = currentKeyAndChildKeys.some((x) =>
     selectedIds.includes(x)
@@ -32,29 +32,6 @@ export const treeHelper = (data: TreeEntry, selectedIds: number[]) => {
       ? [...selectedIds, data.key]
       : selectedIds;
 
-  // if (data.key === 5) {
-  //   console.log(
-  //     "key",
-  //     data.key,
-  //     isSelected,
-  //     selectedStatus,
-  //     everyChildrenSelected,
-  //     someChildrenSelected,
-  //     newSelectedIds
-  //   );
-  // }
-  // if (data.key === 55) {
-  //   console.log(
-  //     "key",
-  //     data.key,
-  //     isSelected,
-  //     selectedStatus,
-  //     everyChildrenSelected,
-  //     someChildrenSelected,
-  //     newSelectedIds
-  //   );
-  // }
-
   return {
     isSelected: _isSelected,
     currentKeyAndChildIds: currentKeyAndChildKeys,
@@ -75,9 +52,9 @@ export const getChildrenSelectedStatus = (
 
     for (const child of data.children) {
       if (!selectedIds.includes(child.key)) {
-        allSelected = false; // Pelo menos um filho não está selecionado
+        allSelected = false;
       } else {
-        noneSelected = false; // Pelo menos um filho está selecionado
+        noneSelected = false;
       }
 
       const childStatus = getChildrenSelectedStatus(child, selectedIds);
@@ -88,23 +65,56 @@ export const getChildrenSelectedStatus = (
     }
 
     if (allSelected) {
-      return "selected"; // Todos os filhos estão selecionados
+      return "selected";
     } else if (noneSelected) {
-      return "notSelected"; // Nenhum filho está selecionado
+      return "notSelected";
     } else {
-      return "indeterminate"; // Nem todos os filhos estão selecionados
+      return "indeterminate";
     }
   }
-  return "selected"; // O nó folha é considerado selecionado
+  return "selected";
 };
 
-const getAllChildKeys = (data: TreeEntry): number[] => {
-  let childIds: number[] = [];
-  if (data.children) {
-    for (const child of data.children) {
-      childIds.push(child.key);
-      childIds = childIds.concat(getAllChildKeys(child));
+export const getChildrenKeys = (data: TreeEntry): number[] => {
+  //nao é useCallback por que é um reduce
+  const _getAllChildKeys = (acc: number[], curr: TreeEntry) => {
+    const children =
+      (curr.children &&
+        curr.children.length > 0 &&
+        curr.children.reduce(_getAllChildKeys, [])) ||
+      [];
+
+    acc.push(curr.key, ...children);
+    return acc;
+  };
+
+  const result = data.children?.reduce(_getAllChildKeys, []);
+  return result || [];
+};
+
+export const filterRecursive = (
+  data: TreeEntry[],
+  searchTerm: string
+): TreeEntry[] => {
+  //nao é useCallback por que é um reduce
+  const filterRecursiveNodes = (acc: TreeEntry[], curr: TreeEntry) => {
+    const children =
+      curr.children && curr.children.length > 0
+        ? curr.children.reduce(filterRecursiveNodes, [])
+        : [];
+
+    if (
+      curr.name.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) >
+        -1 ||
+      // Or a children
+      (children && children.length > 0)
+    ) {
+      acc.push({ ...curr, children });
     }
-  }
-  return childIds;
+
+    return acc;
+  };
+
+  const result = data.reduce(filterRecursiveNodes, []);
+  return result;
 };
