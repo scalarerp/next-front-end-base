@@ -1,40 +1,60 @@
-import React from "react";
-import { TreeEntry } from "./types";
+import React, { useCallback, useState } from "react";
+import { TreeEntryWithUniqueKey } from "./types";
 import { treeHelper, getChildrenSelectedStatus } from "./util";
 
 interface Props {
-  data: TreeEntry;
+  data: TreeEntryWithUniqueKey;
   depth: number;
-  selectedIds: number[];
-  onSelectionChange: (selectedIds: number[]) => void;
-  parents: TreeEntry[];
+  selectedKeys: number[];
+  onSelectionChange: (selectedKeys: number[]) => void;
+  parents: TreeEntryWithUniqueKey[];
+  isSingleSelect: boolean;
 }
 
-const TreeItem = ({
-  data,
-  depth,
-  selectedIds,
-  onSelectionChange,
-  parents = [],
-}: Props) => {
+const TreeItem = (props: Props) => {
   const {
-    isSelected,
+    data,
+    depth,
+    selectedKeys,
+    onSelectionChange,
+    parents = [],
+    isSingleSelect = false,
+  } = props;
+  const {
+    // isSelected,
     selectedStatus,
     currentKeyAndChildIds,
     everyChildrenSelected,
-    newSelectedIds,
-  } = treeHelper(data, selectedIds);
+    newselectedKeys,
+  } = treeHelper(data, selectedKeys);
+
+  // const [expanded, setExpanded] = useState(false);
+  // const handleChangeExpanded = useCallback((newValue: boolean) => {
+  //   setExpanded(newValue);
+  // }, []);
 
   const toggleSelect = () => {
     let result: number[] = [];
 
+    if (isSingleSelect) {
+      console.log(data);
+      if (!data.children || data.children.length === 0) {
+        onSelectionChange([data.key]);
+      } else {
+        onSelectionChange([]);
+      }
+      return;
+    }
+
     if (!everyChildrenSelected) {
       //add
-      result = [...newSelectedIds, ...currentKeyAndChildIds];
+      result = [...newselectedKeys, ...currentKeyAndChildIds];
     }
     if (everyChildrenSelected) {
       //remove
-      result = newSelectedIds.filter((x) => !currentKeyAndChildIds.includes(x));
+      result = newselectedKeys.filter(
+        (x) => !currentKeyAndChildIds.includes(x)
+      );
     }
 
     result = [...new Set(result)];
@@ -58,23 +78,26 @@ const TreeItem = ({
         <span
           onClick={() => toggleSelect()}
           style={{
-            // fontWeight: someChildrenSelected ? "bold" : "normal",
+            fontWeight: selectedStatus === "notSelected" ? "normal" : "bold",
             cursor: "pointer",
             marginLeft: `${depth * 10}px`,
           }}
         >
           <span>
-            <input
-              type="checkbox"
-              checked={selectedStatus === "selected" ? true : false}
-              onChange={() => console.log("onchange", data, isSelected)}
-              ref={(input) => {
-                if (input) {
-                  input.indeterminate = selectedStatus === "indeterminate";
-                }
-              }}
-            />
-            {data.name} ---- {isSelected ? "isSelected" : "notSelected"} ------{" "}
+            {!isSingleSelect && (
+              <input
+                type="checkbox"
+                checked={selectedStatus === "selected" ? true : false}
+                onChange={() => console.log("onchange", data)}
+                ref={(input) => {
+                  if (input) {
+                    input.indeterminate = selectedStatus === "indeterminate";
+                  }
+                }}
+              />
+            )}
+            {data.name}
+            {/* ---- {isSelected ? "isSelected" : "notSelected"} ------{" "} */}
             {selectedStatus}
           </span>
         </span>
@@ -84,9 +107,10 @@ const TreeItem = ({
               key={entry.key}
               data={entry}
               depth={depth + 1}
-              selectedIds={selectedIds}
+              selectedKeys={selectedKeys}
               onSelectionChange={onSelectionChange}
               parents={[data, ...parents]}
+              isSingleSelect={isSingleSelect}
             />
           );
         })}

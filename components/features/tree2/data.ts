@@ -1,57 +1,88 @@
 import { TreeEntry } from "./types";
 export const mockData: TreeEntry[] = [
   {
-    key: 1,
-    name: "Root",
+    id: "Root 1",
+    name: "Root 1",
 
     children: [
       {
-        key: 2,
-        name: "Child 2",
+        id: 2,
+        name: "Child 1 2",
         children: [
           {
-            key: 22,
-            name: "Child 22",
+            id: 22,
+            name: "Child 1 22",
           },
           {
-            key: 25,
-            name: "Child 25",
+            id: 25,
+            name: "Child 1 25",
           },
         ],
       },
       {
-        key: 3,
-        name: "Child 3",
+        id: 3,
+        name: "Child 1 3",
         children: [
           {
-            key: 33,
-            name: "Child 33",
+            id: 33,
+            name: "Child 1 33",
           },
           {
-            key: 37,
-            name: "Child 37",
+            id: 37,
+            name: "Child 1 37",
           },
         ],
       },
       {
-        key: 5,
-        name: "Child 5",
+        id: 5,
+        name: "Child 1 5",
         children: [
           {
-            key: 52,
-            name: "Child 52",
+            id: 52,
+            name: "Child 1 52",
           },
           {
-            key: 55,
-            name: "Child 55",
+            id: 55,
+            name: "Child 1 55",
             children: [
               {
-                key: 520,
-                name: "Child 520",
+                id: 520,
+                name: "Child 1 520",
               },
               {
-                key: 550,
-                name: "Child 550",
+                id: 550,
+                name: "Child 1 550",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "Root2",
+    name: "Root 2",
+
+    children: [
+      {
+        id: "Roo 2 Childt 5",
+        name: "Child 2 5",
+        children: [
+          {
+            id: "Root 2 Child 52",
+            name: "Child 2 52",
+          },
+          {
+            id: "Root 2 Child 55",
+            name: "Child 2 55",
+            children: [
+              {
+                id: "Root  2 Child 520",
+                name: "Child 2 520",
+              },
+              {
+                id: "Root  2 Child 550",
+                name: "Child 2 550",
               },
             ],
           },
