@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./fonts.css";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 // import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
 // import { SiteHeader } from "@/components/site-header";
 
@@ -54,6 +55,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
           <TailwindIndicator />
         </ThemeProvider> */}
+
+        <Link href={"/teste"}>Teste</Link>
+        <Link href={"/"}>Home</Link>
 
         <div className="flex-1">{children}</div>
       </body>
