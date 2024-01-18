@@ -1,6 +1,6 @@
 export type SiteConfig = typeof siteConfig;
 
-export const siteConfig = {
+export const siteConfig = {  
   name: "SiteName",
   description:
     "Beautifully designed components built with Radix UI and Tailwind CSS.",
@@ -16,3 +16,5 @@ export const siteConfig = {
     docs: "https://ui.shadcn.com",
   },
 };
+
+export const appConfigName = siteConfig.name.toLowerCase().trim()

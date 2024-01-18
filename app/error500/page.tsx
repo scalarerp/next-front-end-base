@@ -1,5 +1,5 @@
 "use client";
-import axiosInstance from "@/lib/http";
+import axiosInstance from "@/lib/http/http";
 
 export default function IndexPage() {
   const fetchData = async () => {

@@ -1,17 +1,8 @@
-// import { Inter } from "next/font/google";
 import type { Metadata } from "next";
-
-// import { ThemeProvider } from "@/components/providers/theme-provider";
-// import { ModalProvider } from "@/components/providers/modal-provider";
-
 import "./globals.css";
 import "./fonts.css";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-// import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
-// import { SiteHeader } from "@/components/site-header";
-
-// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Next frontEnd",

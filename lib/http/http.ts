@@ -1,6 +1,6 @@
 // lib/axiosConfig.ts
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
   // Configurações globais do Axios, se necessário

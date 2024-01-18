@@ -2,7 +2,7 @@
 // import Link from "next/link";
 
 // import { buttonVariants } from "@/components/ui/button";
-// import { siteConfig } from "@/lib/siteConfig";
+
 // import TreeExample from "@/components/features/tree";
 import Tree1Example from "@/components/features/tree2";
 
