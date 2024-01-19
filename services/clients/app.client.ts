@@ -1,19 +1,12 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { appMock } from "./app.mock";
-import { dispatchLogout } from "@/context/authentication";
+// import { dispatchLogout } from "@/context/authentication";
 import endpoint from "../config/endpoints.config";
 
 export const appApiClient = axios.create({
   baseURL: endpoint,
 });
 
-if (process.env.USE_MOCK) {
-  console.info(
-    "⚠ info: using mock for requests, they may be out of sync with current backend development",
-  );
-  appMock();
-}
 
 /**
  * @todo handle unauthorized and other useful status codes
@@ -21,10 +14,10 @@ if (process.env.USE_MOCK) {
 appApiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response.status === 401) {
-      dispatchLogout();
-    }
-
+    // if (error.response.status === 401) {
+    //   dispatchLogout();
+    // }
+    console.log(error)
     const message =
       error.response?.data?.detail ||
       error.response?.data?.message ||
@@ -43,7 +36,7 @@ appApiClient.interceptors.response.use(
 
 // Set header from storage on each request using interceptors
 appApiClient.interceptors.request.use(
-  (config) => {
+  (config) => {    
     const token = localStorage.getItem("auth_token");
     if (token) {
       config.headers = config.headers ?? {};
@@ -51,7 +44,8 @@ appApiClient.interceptors.request.use(
     } else {
       config.headers = config.headers ?? {};
       config.headers.Authorization = `Bearer ${token}`;
-    }
+    }   
+     
     return config;
   },
   async (error) => {

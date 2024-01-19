@@ -1,2 +1,2 @@
-export * from "./authentication.context";
-export * from "./authentication.logout";
+export * from "./context";
+export * from "./logout";

@@ -1,5 +1,4 @@
-import React, {
-  type ReactNode,
+import React, {  
   useCallback,
   useEffect,
   useMemo,
@@ -13,8 +12,8 @@ import {
   authStatus,
   type IAuthenticationContext,
   type IAuthenticationStore,
-} from "./authentication.interface";
-import { APP_LOGOUT } from "./authentication.logout";
+} from "./types";
+import { APP_LOGOUT } from "./logout";
 import { createCustomContext } from "@/utils";
 import { useRouter } from "next/navigation";
 import localForage from "@/services/config/localForage.config";
@@ -22,10 +21,6 @@ import localForage from "@/services/config/localForage.config";
 export const [AuthenticationContext, useAuthentication] =
   createCustomContext<IAuthenticationContext>("Authentication Context");
 
-/**
- * Authentication provider.
- * @todo refactor local storage implementation with Local Forage
- */
 export const AuthenticationProvider = ({children}:{children:React.ReactNode}) => {
   const navigate = useRouter();
   const [status, setStatus] = useState(authStatus.Loading);
